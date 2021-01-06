@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="../../Resources/CaPredictorIcon.png">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/Resources/CaPredictorIcon.png') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="script" href="../static/js/index.js">
     <title>CaPredictor</title>
     <style>
         * {
@@ -24,36 +23,93 @@
                 background: #f5f6fa;
                 font-family: Verdana, sans-serif;
             }
+
         }
     </style>
 </head>
 
-<body>
-    <div class="container-fluid p-0" style="background:#2d3436; overflow: hidden" >
-        <div class="row">
-            <div class="col-sm-4">
-                <img src="../../Resources/CaPredictorIcon.png" alt="" class="rounded mx-auto d-block">
-            </div>
-            <div class="col-sm-8 my-auto">
-                <h1 style="color: white; font-weight: lighter;
-                margin-top: 0; font-size: 10vw;}"> CaPredictor </h1>
-            </div>
-        </div>
-    </div>
-<div class="container-fluid" style="background: transparent; overflow: hidden;">
+<body class="px-0; mx-0">
+<div class="container-fluid p-0" style="background:#2d3436; overflow: hidden" >
     <div class="row">
-        <div class="col-sm-2">
-            <label class="switch" rel="stylesheet"
-           style="margin-top: 50%" id="toggle-switch"
-           onclick="toggled()">
-        <input type="checkbox">
-        <span class="slider round"></span>
-    </label>
+        <div class="col-sm-4">
+            <img src="{{ url_for('static', filename='/Resources/CaPredictorIcon.png') }}" alt="" class="rounded mx-auto d-block">
         </div>
-        <div class="col-sm-10">
-            <h3 style="text-align: center" id="state"> Automatic Mode is currently enabled </h3>
+        <div class="col-sm-8 my-auto">
+            <h1 style="color: white; font-weight: lighter;
+                margin-top: 0; font-size: 10vw;}"> CaPredictor </h1>
         </div>
     </div>
+</div>
+<div class="container-fluid border border-white" style="background: #c0392b; overflow: hidden">
+    <div class="row" style="overflow: hidden">
+        <div class="col-sm-6 my-auto" style="overflow: hidden">
+            <h3 style="text-align: center; color: white; overflow: hidden; font-weight: lighter" id="state" >
+                <script>
+                    function toggled() {
+                        check = document.getElementById("checkboxItem").checked
+                        if (check === true){
+                            document.getElementById("state").innerHTML = "Manual Mode";
+                            location.href= "{{ url_for('manual') }}";
+
+                        }else{
+                            document.getElementById("state").innerHTML = "Manual Mode";
+                        }
+                    }
+                </script> Manual Mode </h3>
+        </div>
+        <div class="col-sm-6 my-auto overflow-auto" onclick="toggled()">
+            <label class="switch" rel="script"
+                   id="toggle-switch" onchange="toggled()">
+                <input type="checkbox" id="checkboxItem">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="container-fluid p-0 border-white" style="overflow: hidden; margin-top: 2%; margin-bottom: 2%">
+    <div class="form-group my-auto" style="font-size: small">
+        <form class="row" action="/" method="POST" style="width: 100%; margin-left: 0.25%"
+              autocomplete="off">
+            <input class="col-sm-3 form-control" type="text" name="player_name"
+                   id = "player_name" placeholder="Player Name" style="text-align: center"
+            >
+            <input class="col-sm-3 form-control" type="number" max="8" min="1"
+                   name="length" id="length" placeholder="Contract Length"
+                   style="text-align: center">
+            <select name="resign" id="resign" class="col-sm-3 form-control" style="text-align-last: center; text-align: center">
+                <option>Re-sign</option>
+                <option>Free Agent</option>
+            </select>
+            <input type="submit" value="Search Player" class="col-sm-3 btn btn-primary">
+        </form>
+    </div>
+</div>
+<div class="card rounded">
+    <h1 style="font-size: large; text-align: center; margin-top: 0.5%"> Today's Searches </h1>
+    <table class="table table-striped table-bordered table-hover" style="width: 100%">
+        <thead class="thead-light" style="font-size: small; text-align: center; width: 100%">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Previous Year</th>
+            <th scope="col">Valuation</th>
+            <th scope="col"> Length </th>
+        </tr>
+        </thead>
+        {% for player in players %}
+        <tbody style="font-size: small; text-align: center;
+        margin: auto; width: 100%" id="player" class="table-dark">
+        <tr>
+            <th>{{ loop.index }}</th>
+            <td>{{ player.name.split(':')[0] }}</td>
+            <td>{{ player.name.split(':')[1] }}</td>
+            <td>{{ player.name.split(':')[2] }}</td>
+            <td>{{ player.name.split(':')[3] }}</td>
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
 </div>
 </body>
 </html>
