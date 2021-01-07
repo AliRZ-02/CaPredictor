@@ -29,6 +29,13 @@
 </head>
 
 <body class="px-0; mx-0">
+
+{% if url_for(request.endpoint) == "/error" %}
+    <script>
+        alert("The player you were looking for was not found. Try using manual mode")
+    </script>
+{% endif %}
+
 <div class="container-fluid p-0" style="background:#2d3436; overflow: hidden" >
     <div class="row">
         <div class="col-sm-4">
@@ -79,13 +86,15 @@
                 <option>Re-sign</option>
                 <option>Free Agent</option>
             </select>
-            <input type="submit" value="Search Player" class="col-sm-3 btn btn-primary">
+            <input type="submit" value="Search Player" class="col-sm-3 btn btn-primary"
+                   id="search">
         </form>
     </div>
 </div>
 
 {% if players is defined and players[0] is defined and players[0].name.split(':')[0] != "User-Generated-F"
-and players[0].name.split(':')[0] != "User-Generated-D" and players[0].name.split(':')[0] != "User-Generated-G" %}
+and players[0].name.split(':')[0] != "User-Generated-D" and players[0].name.split(':')[0] != "User-Generated-G"
+and url_for(request.endpoint) == "/results" %}
 
 <div class="card rounded overflow-auto" style="padding-top: 2%; padding-bottom: 2%;
 padding-left: 2vw; padding-right: 2vw; overflow: hidden">
@@ -94,9 +103,10 @@ padding-left: 2vw; padding-right: 2vw; overflow: hidden">
     </div>
     <hr>
     <div class="row">
-        <div class="col-sm-3" style="padding-bottom: 2%">
+        <div class="col-sm-3 d-block my-auto mx-auto" style="padding-bottom: 2%">
             <img src="{{ players[0].photo }}" style="display: flex;
-            align-items: center; flex-wrap: wrap;" class="d-block mx-auto">
+            align-items: center; flex-wrap: wrap;"
+                 class="d-block mx-auto my-auto" alt="players[0].name.split(':')[0]">
         </div>
         <div class="col-sm-6 my-auto">
             <h1 style="font-size: large; text-align: center">
@@ -106,14 +116,22 @@ padding-left: 2vw; padding-right: 2vw; overflow: hidden">
                 {{ players[0].name.split(':')[1][1:].split(")")[0] }} season
             </h1>
         </div>
-            <div class="col-sm-3" style="padding-bottom: 2%">
-            <img src="{{ players[0].photo }}" style="display: flex;
-            align-items: center; flex-wrap: wrap;" class="d-block mx-auto">
+            <div class="col-sm-3 my-auto" style="padding-bottom: 2%">
+                <a href="https://flagpedia.net">
+                    <img src="{{ players[0].nationality }}"
+                 srcset="{{ players[0].nationality_2 }}"
+                 width="168" height="168" alt="{{ players[0].nationality }}"
+                 style="display: flex; align-items: center; flex-wrap: wrap;
+                  object-fit: contain"
+                 class="d-block mx-auto my-auto">
+                </a>
         </div>
     </div>
 </div>
 
 {% endif %}
+
+{% if url_for(request.endpoint) == "/results" %}
 
 <div class="card rounded" style="margin-top: 2%">
     <h1 style="font-size: xx-large; text-align: center; margin-top: 0.5%">
@@ -150,6 +168,7 @@ padding-left: 2vw; padding-right: 2vw; overflow: hidden">
         </tbody>
     </table>
 
+    {% endif %}
 </div>
 </body>
 <footer class="col-sm-12 card-footer" style="margin-top: 2%">

@@ -15,6 +15,8 @@ class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     photo = db.Column(db.String(200))
+    nationality = db.Column(db.String(200))
+    nationality_2 = db.Column(db.String(200))
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
@@ -44,23 +46,41 @@ def index():
             pass
         money = interactions.GetInfo(player_name, contract_length)
         value = money.automatic(resign_statement)
-        link = "http://nhl.bamcontent.com/images/headshots/current/168x168/"+ value.split(":")[4]+".jpg"
-        new_player = Todo(name=value, photo=link)
         if value != "No Player Found. Please try again using manual mode" \
                 and value != "Such a player was not found. Try using manual mode":
             try:
+                link = "http://nhl.bamcontent.com/images/headshots/current/168x168/" \
+                       + value.split(":")[4] + ".jpg"
+                nations = {"CAN": "CA", "USA": "US", "SWE": "SE", "RUS": "RU",
+                           "FIN": "FI", "CZE": "CZ", "CHE": "CH", "DNK": "DK",
+                           "DEU": "DE", "SVK": "SK", "AUT": "AT", "SVN": "SI",
+                           "FRA": "FR", "NOR": "NO", "LVA": "LV", "AUS": "AU",
+                           "NLD": "NL"}
+                nation = nations[money.flag()].lower()
+                flag = "https://flagcdn.com/w160/" + nation + ".png"
+                flag2 = "https://flagcdn.com/w320/" + nation + ".png 2x"
+                new_player = Todo(name=value, photo=link, nationality=flag, nationality_2=flag2)
+                reduce_db()
+                check_duplicates(new_player)
                 db.session.add(new_player)
                 db.session.commit()
-                return redirect('/')
+                return redirect('/results')
             except:
                 return "There was an error in searching the player. Please try again later"
         else:
-            return redirect('/')
-
+            return redirect('/error')
 
     else:
         players = Todo.query.order_by(Todo.date_created.desc()).all()
         return render_template('index.html', players= players)
+
+@app.route('/results', methods=['POST', 'GET'])
+def results():
+    return index()
+
+@app.route('/error', methods=['POST', 'GET'])
+def error():
+    return index()
 
 @app.route('/manual', methods=['GET'])
 def manual():
@@ -104,18 +124,19 @@ def forward():
         money = interactions.GetInfo(player_name="User-Generated-F", length= contract_length)
         value = money.forward(position, age, g82, a82, p82, ppg=(p82/82))
         new_player = Todo(name=value)
-
+        reduce_db()
+        check_duplicates(new_player)
         try:
             db.session.add(new_player)
             db.session.commit()
-            return redirect('/manual/forward/seen')
+            return redirect('/manual/forward/results')
         except:
             return "There was an error in searching the player. Please try again later"
     else:
         players = Todo.query.order_by(Todo.date_created.desc()).all()
         return render_template('forward.html', players= players)
 
-@app.route('/manual/forward/seen', methods=['POST', 'GET'])
+@app.route('/manual/forward/results', methods=['POST', 'GET'])
 def f_seen():
     return forward()
 
@@ -159,17 +180,19 @@ def defence():
         value = money.defence(age, g82, a82, p82, (p82/82), b82, h82,
                               gp, toi, spct, resign_statement)
         new_player = Todo(name=value)
+        reduce_db()
+        check_duplicates(new_player)
         try:
             db.session.add(new_player)
             db.session.commit()
-            return redirect('/manual/defence')
+            return redirect('/manual/defence/results')
         except:
             return "There was an error in searching the player. Please try again later"
     else:
         players = Todo.query.order_by(Todo.date_created.desc()).all()
         return render_template('defence.html', players= players)
 
-@app.route('/manual/defence/seen', methods=['POST', 'GET'])
+@app.route('/manual/defence/results', methods=['POST', 'GET'])
 def d_seen():
     return defence()
 
@@ -204,20 +227,49 @@ def goalie():
         money = interactions.GetInfo("User-Generated-G", contract_length)
         value = money.goalie(age, gp, gaa, svpct, winpct, resign_statement)
         new_player = Todo(name=value)
-
+        reduce_db()
+        check_duplicates(new_player)
         try:
             db.session.add(new_player)
             db.session.commit()
-            return redirect('/manual/goalie')
+            return redirect('/manual/goalie/results')
         except:
             return "There was an error in searching the player. Please try again later"
     else:
         players = Todo.query.order_by(Todo.date_created.desc()).all()
         return render_template('goalie.html', players= players)
 
-@app.route('/manual/goalie/seen', methods=['POST', 'GET'])
+@app.route('/manual/goalie/results', methods=['POST', 'GET'])
 def g_seen():
     return goalie()
+
+def reduce_db():
+    players = Todo.query.order_by(Todo.date_created).all()
+    if len(players) > 5:
+        for player in players:
+            if player.name == "User-Generated-F" or \
+                player.name == "User-Generated-D" or \
+                player.name == "User-Generated-G":
+                    db.session.delete(player)
+                    db.session.commit()
+                    break
+            else:
+                pass
+        players = Todo.query.order_by(Todo.date_created).all()
+        if len(players) > 5:
+            db.session.delete(players[0])
+            db.session.commit()
+    else:
+        pass
+
+def check_duplicates(content):
+    players = Todo.query.order_by(Todo.date_created).all()
+    for player in players:
+        if content.name == player.name:
+            db.session.delete(player)
+            break
+        else:
+            pass
 
 if __name__ == "__main__":
     app.run(debug=True)

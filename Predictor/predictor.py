@@ -44,6 +44,7 @@ class GetPrediction:
             self.length = int(self.length * (7/8))
         else:
             pass
+        value = format(value, ",")
         return str(self.player) + ":(2019-2020):$" + str(value)\
                + ":" + str(self.length) + ":"+ str(self.player_id)
 

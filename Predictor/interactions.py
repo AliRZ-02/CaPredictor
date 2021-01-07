@@ -11,18 +11,7 @@ class GetInfo:
     def automatic(self, resign=True):
         if resign is False:
             self.length = self.length * (8/7)
-        reader = csv.reader(open('..\Data\Players\idList.csv'))
-        players={}
-        name_list = []
-        for name, id in reader:
-            if name != 'Names':
-                players[name] = id
-                name_list.append(name)
-        try:
-            matches = get_close_matches(self.player_name, name_list, n=5)
-            player_id = players[matches[0]]
-        except:
-            return "No Player Found. Please try again using manual mode"
+        player_id = self.__id()
         try:
             player_stats = requests.get("https://statsapi.web.nhl.com/api/v1/people/"
                                        +str(player_id)+
@@ -33,10 +22,11 @@ class GetInfo:
         try:
             position = player_data.json()['people'][0]["primaryPosition"]["code"]
             age = player_data.json()['people'][0]['currentAge']
+            name = player_data.json()['people'][0]['fullName']
             stats = player_stats.json()['stats'][0]['splits'][0]['stat']
         except:
             return "Such a player was not found. Try using manual mode"
-        get_pred = predictor.GetPrediction(matches[0], self.length, position, age, resign, player_id)
+        get_pred = predictor.GetPrediction(name, self.length, position, age, resign, player_id)
         if position == 'L' or position == 'R' or position == 'C' or position == 'D':
             g82 = (stats['goals'] / stats['games']) * 82
             a82 = (stats['assists'] / stats['games']) * 82
@@ -94,3 +84,25 @@ class GetInfo:
         algorithm = predictor.GetPrediction(self.player_name, self.length, 'G', age, resign)
         prediction = algorithm.goalie(gp, gaa, svpct, winpct)
         return prediction
+    def __id(self):
+        reader = csv.reader(open('..\Data\Players\idList.csv'))
+        players = {}
+        name_list = []
+        for name, id in reader:
+            if name != 'Names':
+                players[name] = id
+                name_list.append(name)
+        try:
+            matches = get_close_matches(self.player_name, name_list, n=5)
+            return players[matches[0]]
+        except:
+            return "No Player Found. Please try again using manual mode"
+    def flag(self):
+        player_id = self.__id()
+        try:
+            player_data = requests.get\
+                ("https://statsapi.web.nhl.com/api/v1/people/"
+                 + str(player_id))
+        except:
+            return "Such a player was not found. Try using manual mode"
+        return player_data.json()['people'][0]['nationality']

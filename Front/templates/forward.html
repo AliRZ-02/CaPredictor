@@ -226,8 +226,6 @@ input:checked + .slider:before {
                 <option> C </option>
                 <option> RW </option>
                 <option> LW </option>
-                <option> D </option>
-                <option> G </option>
             </select>
             <input class="col-sm-3 form-control" type="number" max="8" min="1"
                    name="length" id="length" placeholder="Contract Length"
@@ -258,7 +256,7 @@ input:checked + .slider:before {
 
 {% if players is defined and players[0] is defined
 and players[0].name.split(':')[0] == "User-Generated-F"
-and url_for(request.endpoint) == "/manual/forward/seen" %}
+and url_for(request.endpoint) == "/manual/forward/results" %}
 
 <div class="card rounded overflow-auto" style="padding-top: 2%; padding-bottom: 2%;
 padding-left: 2vw; padding-right: 2vw; overflow: hidden">
