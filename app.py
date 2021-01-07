@@ -49,6 +49,7 @@ def index():
         if value != "No Player Found. Please try again using manual mode" \
                 and value != "Such a player was not found. Try using manual mode":
             try:
+                print(value)
                 link = "http://nhl.bamcontent.com/images/headshots/current/168x168/" \
                        + value.split(":")[4] + ".jpg"
                 nations = {"CAN": "CA", "USA": "US", "SWE": "SE", "RUS": "RU",

@@ -24,7 +24,7 @@ class GetPrediction:
             self.bridge = 'S-'
     def get_model(self):
         try:
-            model = joblib.load('..\Models' + '\\' + self.mode + '-' + self.group + self.bridge + 'Model.joblib')
+            model = joblib.load('Models' + '\\' + self.mode + '-' + self.group + self.bridge + 'Model.joblib')
             return model
         except:
             return FileNotFoundError

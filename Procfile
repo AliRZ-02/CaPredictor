@@ -1,1 +1,1 @@
-web gunicorn /Front/app:app
+web gunicorn app:app
