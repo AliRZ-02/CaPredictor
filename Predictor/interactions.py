@@ -1,15 +1,15 @@
 # Import Statements
 import csv
 import requests
-import predictor
+from Predictor import predictor
 from difflib import get_close_matches
 
 class GetInfo:
     def __init__(self, player_name, length):
         self.player_name = player_name
         self.length = length
-    def automatic(self, resign=True, attempts=0):
-        if resign == False:
+    def automatic(self, resign=True):
+        if resign is False:
             self.length = self.length * (8/7)
         reader = csv.reader(open('..\Data\Players\idList.csv'))
         players={}
@@ -20,7 +20,7 @@ class GetInfo:
                 name_list.append(name)
         try:
             matches = get_close_matches(self.player_name, name_list, n=5)
-            player_id = players[matches[attempts]]
+            player_id = players[matches[0]]
         except:
             return "No Player Found. Please try again using manual mode"
         try:
@@ -29,14 +29,14 @@ class GetInfo:
                                        "/stats?stats=statsSingleSeason&season=20192020")
             player_data = requests.get("https://statsapi.web.nhl.com/api/v1/people/" +str(player_id))
         except:
-            if attempts <= 3:
-                return self.automatic(self.player_name, self.length, attempts=attempts+1)
-            else:
                 return "Such a player was not found. Try using manual mode"
-        position = player_data.json()['people'][0]["primaryPosition"]["code"]
-        age = player_data.json()['people'][0]['currentAge']
-        stats = player_stats.json()['stats'][0]['splits'][0]['stat']
-        get_pred = predictor.GetPrediction(matches[attempts], self.length, position, age)
+        try:
+            position = player_data.json()['people'][0]["primaryPosition"]["code"]
+            age = player_data.json()['people'][0]['currentAge']
+            stats = player_stats.json()['stats'][0]['splits'][0]['stat']
+        except:
+            return "Such a player was not found. Try using manual mode"
+        get_pred = predictor.GetPrediction(matches[0], self.length, position, age, resign, player_id)
         if position == 'L' or position == 'R' or position == 'C' or position == 'D':
             g82 = (stats['goals'] / stats['games']) * 82
             a82 = (stats['assists'] / stats['games']) * 82
@@ -79,18 +79,18 @@ class GetInfo:
     def forward(self, position, age, g82, a82, p82, ppg, resign=True):
         if not resign:
             self.length = self.length * (8/7)
-        algorithm = predictor.GetPrediction(self.player_name, self.length, position, age)
+        algorithm = predictor.GetPrediction(self.player_name, self.length, position, age, resign)
         prediction = algorithm.forward(g82,a82,p82,ppg)
         return prediction
     def defence(self, age, g82, a82, p82, ppg, b82, h82, gp, toi, spct, resign=True):
         if not resign:
             self.length = self.length * (8/7)
-        algorithm = predictor.GetPrediction(self.player_name, self.length, 'D', age)
+        algorithm = predictor.GetPrediction(self.player_name, self.length, 'D', age, resign)
         prediction = algorithm.defence(g82,a82,p82,ppg,b82,h82,gp,toi,spct)
         return prediction
     def goalie(self, age, gp, gaa, svpct, winpct, resign = True):
         if not resign:
             self.length = self.length * (8/7)
-        algorithm = predictor.GetPrediction(self.player_name, self.length, 'G', age)
+        algorithm = predictor.GetPrediction(self.player_name, self.length, 'G', age, resign)
         prediction = algorithm.goalie(gp, gaa, svpct, winpct)
         return prediction

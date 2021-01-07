@@ -1,4 +1,5 @@
 # Import Statements
+import math
 
 import sqlalchemy
 from Predictor import interactions
@@ -13,6 +14,7 @@ db = SQLAlchemy(app)
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
+    photo = db.Column(db.String(200))
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
@@ -31,6 +33,7 @@ def index():
             resign_statement = True
         else:
             resign_statement = False
+        player_name = player_name.lower()
         if contract_length <= 1:
             contract_length = 1
         elif contract_length >= 8 and resign_statement is True:
@@ -41,8 +44,8 @@ def index():
             pass
         money = interactions.GetInfo(player_name, contract_length)
         value = money.automatic(resign_statement)
-        new_player = Todo(name=value)
-
+        link = "http://nhl.bamcontent.com/images/headshots/current/168x168/"+ value.split(":")[4]+".jpg"
+        new_player = Todo(name=value, photo=link)
         if value != "No Player Found. Please try again using manual mode" \
                 and value != "Such a player was not found. Try using manual mode":
             try:
@@ -59,21 +62,162 @@ def index():
         players = Todo.query.order_by(Todo.date_created.desc()).all()
         return render_template('index.html', players= players)
 
-@app.route('/manual', methods=['POST', 'GET'])
+@app.route('/manual', methods=['GET'])
 def manual():
+    return render_template('manual.html')
+
+@app.route('/manual/forward', methods=['POST', 'GET'])
+def forward():
     if request.method == 'POST':
-        player_name = request.form['player_name']
-        new_player = Todo(name_manual="User Generated")
+        try:
+            position = request.form['position']
+            contract_length = round(float(request.form['length']))
+            age = int(request.form['age'])
+            resign_statement = request.form['resign']
+            g82 = float(request.form['g82'])
+            a82 = float(request.form['a82'])
+            p82 = float(request.form['p82'])
+        except:
+            return redirect('/manual/forward')
+
+        if position == 'RW':
+            position = 'R'
+        elif position == 'LW':
+            position = 'L'
+        else:
+            pass
+
+        if resign_statement == 'Re-sign':
+            resign_statement = True
+        else:
+            resign_statement = False
+
+        if contract_length <= 1:
+            contract_length = 1
+        elif contract_length >= 8 and resign_statement is True:
+            contract_length = 8
+        elif contract_length >= 7 and resign_statement is False:
+            contract_length = 7
+        else:
+            pass
+
+        money = interactions.GetInfo(player_name="User-Generated-F", length= contract_length)
+        value = money.forward(position, age, g82, a82, p82, ppg=(p82/82))
+        new_player = Todo(name=value)
 
         try:
             db.session.add(new_player)
             db.session.commit()
-            return redirect('/')
+            return redirect('/manual/forward/seen')
         except:
             return "There was an error in searching the player. Please try again later"
     else:
-        players = Todo.query.order_by(Todo.date_created).all()
-        return render_template('manual.html', players= players)
+        players = Todo.query.order_by(Todo.date_created.desc()).all()
+        return render_template('forward.html', players= players)
+
+@app.route('/manual/forward/seen', methods=['POST', 'GET'])
+def f_seen():
+    return forward()
+
+@app.route('/manual/defence', methods=['POST', 'GET'])
+def defence():
+    if request.method == 'POST':
+        try:
+            gp = int(request.form['gp'])
+            contract_length = round(float(request.form['length']))
+            age = int(request.form['age'])
+            resign_statement = request.form['resign']
+            g82 = float(request.form['g82'])
+            a82 = float(request.form['a82'])
+            p82 = float(request.form['p82'])
+            toi = float(request.form['toi'])
+            toi_min = math.floor(toi)
+            toi_sec = toi - toi_min
+            toi = toi_min + ((toi_sec*100)/60)
+            b82 = float(request.form['b82'])
+            h82 = float(request.form['h82'])
+            spct = float(request.form['spct'])
+            spct = spct/100
+        except:
+            return redirect('/manual/defence')
+
+        if resign_statement == 'Re-sign':
+            resign_statement = True
+        else:
+            resign_statement = False
+
+        if contract_length <= 1:
+            contract_length = 1
+        elif contract_length >= 8 and resign_statement is True:
+            contract_length = 8
+        elif contract_length >= 7 and resign_statement is False:
+            contract_length = 7
+        else:
+            pass
+
+        money = interactions.GetInfo("User-Generated-D", contract_length)
+        value = money.defence(age, g82, a82, p82, (p82/82), b82, h82,
+                              gp, toi, spct, resign_statement)
+        new_player = Todo(name=value)
+        try:
+            db.session.add(new_player)
+            db.session.commit()
+            return redirect('/manual/defence')
+        except:
+            return "There was an error in searching the player. Please try again later"
+    else:
+        players = Todo.query.order_by(Todo.date_created.desc()).all()
+        return render_template('defence.html', players= players)
+
+@app.route('/manual/defence/seen', methods=['POST', 'GET'])
+def d_seen():
+    return defence()
+
+@app.route('/manual/goalie', methods=['POST', 'GET'])
+def goalie():
+    if request.method == 'POST':
+        try:
+            gp = int(request.form['gp'])
+            contract_length = round(float(request.form['length']))
+            age = int(request.form['age'])
+            resign_statement = request.form['resign']
+            gaa = float(request.form['gaa'])
+            svpct = float(request.form['svpct'])
+            winpct = float(request.form['winpct'])
+        except:
+            return redirect('/manual/defence')
+
+        if resign_statement == 'Re-sign':
+            resign_statement = True
+        else:
+            resign_statement = False
+
+        if contract_length <= 1:
+            contract_length = 1
+        elif contract_length >= 8 and resign_statement is True:
+            contract_length = 8
+        elif contract_length >= 7 and resign_statement is False:
+            contract_length = 7
+        else:
+            pass
+
+        money = interactions.GetInfo("User-Generated-G", contract_length)
+        value = money.goalie(age, gp, gaa, svpct, winpct, resign_statement)
+        new_player = Todo(name=value)
+
+        try:
+            db.session.add(new_player)
+            db.session.commit()
+            return redirect('/manual/goalie')
+        except:
+            return "There was an error in searching the player. Please try again later"
+    else:
+        players = Todo.query.order_by(Todo.date_created.desc()).all()
+        return render_template('goalie.html', players= players)
+
+@app.route('/manual/goalie/seen', methods=['POST', 'GET'])
+def g_seen():
+    return goalie()
 
 if __name__ == "__main__":
     app.run(debug=True)

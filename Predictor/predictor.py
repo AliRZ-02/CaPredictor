@@ -2,11 +2,13 @@
 import joblib
 
 class GetPrediction:
-    def __init__(self, player, length, mode, age):
+    def __init__(self, player, length, mode, age, resign, player_id = 0):
         self.player = player
-        self.length = length
+        self.length = int(length)
         self.mode = mode
         self.age = age
+        self.resign = resign
+        self.player_id = player_id
         self.error = "An error occurred. Check if all inputs have been entered correctly and please try again"
         if self.mode == 'G':
             self.group = ''
@@ -36,7 +38,14 @@ class GetPrediction:
             else:
                 current = current + character
         value = round((float(current) * 81500000))
-        return str(self.player) + " is worth approximately: $" + str(value)
+        if value <= 700000:
+            value = 700000
+        if not self.resign:
+            self.length = int(self.length * (7/8))
+        else:
+            pass
+        return str(self.player) + ":(2019-2020):$" + str(value)\
+               + ":" + str(self.length) + ":"+ str(self.player_id)
 
     def forward(self, g82, a82, p82, ppg):
         try:

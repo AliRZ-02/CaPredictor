@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/Resources/CaPredictorIcon.png') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>CaPredictor</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background: #f5f6fa;
+            font-family: Verdana, sans-serif;
+            font-size: 10vw
+        }
+        .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+        @media (max-width: 575px) {
+            body {
+                text-align: center;
+                background: #f5f6fa;
+                font-family: Verdana, sans-serif;
+            }
+            .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+        }
+    </style>
+</head>
+
+<body class="px-0; mx-0">
+<div class="container-fluid p-0" style="background:#2d3436; overflow: hidden" >
+    <div class="row">
+        <div class="col-sm-4">
+            <img src="{{ url_for('static', filename='/Resources/CaPredictorIcon.png') }}" alt="" class="rounded mx-auto d-block">
+        </div>
+        <div class="col-sm-8 my-auto">
+            <h1 style="color: white; font-weight: lighter;
+                margin-top: 0; font-size: 10vw;}"> CaPredictor </h1>
+        </div>
+    </div>
+</div>
+<div class="container-fluid border border-white" style="background: #c0392b; overflow: hidden">
+    <div class="row" style="overflow: hidden; padding-top:0.5%; padding-bottom: 0.5%">
+        <div class="col-sm-6 my-auto" style="overflow: hidden">
+            <h3 style="text-align: center; color: white;  overflow: hidden;
+             font-weight: lighter" id="state" >
+                <script>
+                    function toggled() {
+                        check = document.getElementById("checkboxItem").checked
+                        if (check === true){
+                            document.getElementById("state").innerHTML = "Manual Mode";
+
+                        }else{
+                            document.getElementById("state").innerHTML = "Manual Mode";
+                            location.href= "{{ url_for('index') }}";
+                        }
+                    }
+                </script> Manual Mode </h3>
+        </div>
+            <label class="switch col-sm-0 my-auto d-block mx-auto" rel="script"
+                   id="toggle-switch" onchange="toggled()">
+                <input type="checkbox" id="checkboxItem" checked>
+                <span class="slider round"></span>
+            </label>
+    </div>
+</div>
+
+<div class="container-fluid p-0 border-white"
+     style="overflow: hidden; margin-top: 2%; margin-bottom: 2%; height: 3%">
+    <div class="row">
+        <script>
+                    function openGoalie() {
+                        location.href = "{{ url_for('goalie') }}"
+                    }
+                    function openDefence() {
+                        location.href = "{{ url_for('defence') }}"
+                    }
+                    function openForward() {
+                        location.href = "{{ url_for('forward') }}"
+                    }
+                </script>
+            <button class="btn btn-primary col-sm-3 d-block mx-auto"
+                    style="height: 2%" onclick="openForward()">
+                Forwards
+            </button>
+        <div class="col-sm-1"></div>
+            <button class="btn btn-outline-danger col-sm-3" style="height: 2%" onclick="openDefence()">
+                Defencemen
+            </button>
+        <div class="col-sm-1"></div>
+            <button class="btn btn-outline-success col-sm-3 d-block mx-auto" style="height: 2%" onclick="openGoalie()">
+                Goalies
+            </button>
+    </div>
+</div>
+
+<div class="container-fluid p-0 border-white d-block mx-auto"
+     style="overflow: hidden; margin-top: 2%; margin-bottom: 2%; padding-left: 2%">
+    <div class="form-group my-auto" style="font-size: small">
+        <form class="row" action="/manual/forward" method="POST" style="width: 100%; margin-left: 0.25%"
+              autocomplete="off">
+            <div class="row" style="width: 100%">
+                <select class="col-sm-3 form-control" name="position" id = "position"
+                    style="text-align-last: center; text-align: center">
+                <option> C </option>
+                <option> RW </option>
+                <option> LW </option>
+                <option> D </option>
+                <option> G </option>
+            </select>
+            <input class="col-sm-3 form-control" type="number" max="8" min="1"
+                   name="length" id="length" placeholder="Contract Length"
+                   style="text-align: center" required>
+                <input class="col-sm-3 form-control" type="number" min="18" max="45"
+                       name="age" id="age" placeholder="Age" style="text-align: center" required>
+            <select name="resign" id="resign" class="col-sm-3 form-control"
+                    style="text-align-last: center; text-align: center">
+                <option>Re-sign</option>
+                <option>Free Agent</option>
+            </select>
+            </div>
+            <div class="row" style="width: 100%">
+                <input class="col-sm-3 form-control" type="number" min="0"
+                   name="g82" id="g82" placeholder="G/82"
+                   style="text-align: center" step="0.001" required>
+                <input class="col-sm-3 form-control" type="number" min="0"
+                   name="a82" id="a82" placeholder="A/82"
+                   style="text-align: center" step="0.001" required>
+                <input class="col-sm-3 form-control" type="number" min="0"
+                   name="p82" id="p82" placeholder="P/82"
+                   style="text-align: center" step="0.001" required>
+                <input type="submit" value="Search Player" class="col-sm-3 btn btn-primary">
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if players is defined and players[0] is defined
+and players[0].name.split(':')[0] == "User-Generated-F"
+and url_for(request.endpoint) == "/manual/forward/seen" %}
+
+<div class="card rounded overflow-auto" style="padding-top: 2%; padding-bottom: 2%;
+padding-left: 2vw; padding-right: 2vw; overflow: hidden">
+    <div class="col-sm-12">
+        <h1 style="font-size: xx-large; text-align: center"> Latest Search </h1>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-12 my-auto">
+            <h1 style="font-size: large; text-align: center">
+            The given player would be worth
+                <span style="color: #c0392b"> {{ players[0].name.split(':')[2] }} </span>
+                for {{ players[0].name.split(':')[3] }} year(s)
+            </h1>
+    </div>
+</div>
+</div>
+{% endif %}
+
+</body>
+
+<footer class="col-sm-12 card-footer" style="margin-top: 2%">
+    <div class="row">
+        <div class="col-sm-4 my-auto" style="padding-bottom: 0.5%">
+            <a href="https://github.com/AliRZ-02">
+                <img src="{{ url_for('static', filename='/Resources/github.png') }}" style="display: flex;
+            align-items: center; flex-wrap: wrap;" class="d-block mx-auto">
+            </a>
+        </div>
+        <div class="col-sm-8 my-auto">
+            <h1 style="font-size: large; text-align: center; margin-top: 0.5%">
+                Developed by Ali Raza Zaidi and Danyal Zaidi.
+                To find out more, check out the <a href="https://github.com/AliRZ-02"> GitHub </a> repository
+            </h1>
+        </div>
+    </div>
+</footer>
+</html>

@@ -23,58 +23,95 @@
                 background: #f5f6fa;
                 font-family: Verdana, sans-serif;
             }
+
         }
     </style>
 </head>
 
-<body>
-    <div class="container-fluid p-0" style="background:#2d3436; overflow: hidden" >
-        <div class="row">
-            <div class="col-sm-4">
-                <img src="{{ url_for('static', filename='/Resources/CaPredictorIcon.png') }}" alt="" class="rounded mx-auto d-block">
-            </div>
-            <div class="col-sm-8 my-auto">
-                <h1 style="color: white; font-weight: lighter;
+<body class="px-0; mx-0">
+<div class="container-fluid p-0" style="background:#2d3436; overflow: hidden" >
+    <div class="row">
+        <div class="col-sm-4">
+            <img src="{{ url_for('static', filename='/Resources/CaPredictorIcon.png') }}" alt="" class="rounded mx-auto d-block">
+        </div>
+        <div class="col-sm-8 my-auto">
+            <h1 style="color: white; font-weight: lighter;
                 margin-top: 0; font-size: 10vw;}"> CaPredictor </h1>
-            </div>
         </div>
     </div>
-<div class="container-fluid" style="background: transparent; overflow: hidden;">
-    <div class="row">
-        <div class="col-sm-6" style="margin-top: 1.5%">
-            <h3 style="text-align: right" id="state">
+</div>
+<div class="container-fluid border border-white" style="background: #c0392b; overflow: hidden">
+    <div class="row" style="overflow: hidden; padding-top:0.5%; padding-bottom: 0.5%">
+        <div class="col-sm-6 my-auto" style="overflow: hidden">
+            <h3 style="text-align: center; color: white;  overflow: hidden;
+             font-weight: lighter" id="state" >
                 <script>
                     function toggled() {
                         check = document.getElementById("checkboxItem").checked
                         if (check === true){
-                         document.getElementById("state").innerHTML = "Manual Mode";
-                         location.href= "{{ url_for('index') }}";
+                            document.getElementById("state").innerHTML = "Manual Mode";
+                            location.href= "{{ url_for('manual') }}";
 
                         }else{
                             document.getElementById("state").innerHTML = "Manual Mode";
+                            location.href = "{{ url_for('index') }}"
                         }
                     }
                 </script> Manual Mode </h3>
         </div>
-        <div class="col-sm-6" onclick="toggled()">
-            <label class="switch" style="margin-top: 3%" rel="script"
-                    id="toggle-switch" onchange="toggled()">
-        <input type="checkbox" id="checkboxItem" checked>
-        <span class="slider round"></span>
-    </label>
+            <label class="switch col-sm-0 my-auto d-block mx-auto" rel="script"
+                   id="toggle-switch" onchange="toggled()">
+                <input type="checkbox" id="checkboxItem" checked>
+                <span class="slider round"></span>
+            </label>
+    </div>
+</div>
+<div class="container-fluid p-0 border-white"
+     style="overflow: hidden; margin-top: 2%; margin-bottom: 2%; height: 3%">
+    <div class="row">
+        <script>
+                    function openGoalie() {
+                        location.href = "{{ url_for('goalie') }}"
+                    }
+                    function openDefence() {
+                        location.href = "{{ url_for('defence') }}"
+                    }
+                    function openForward() {
+                        location.href = "{{ url_for('forward') }}"
+                    }
+                </script>
+            <button class="btn btn-outline-primary col-sm-3 d-block mx-auto"
+                    style="height: 2%" onclick="openForward()">
+                Forwards
+            </button>
+        <div class="col-sm-1"></div>
+            <button class="btn btn-outline-danger col-sm-3" style="height: 2%"
+                    onclick="openDefence()">
+                Defencemen
+            </button>
+        <div class="col-sm-1"></div>
+            <button class="btn btn-outline-success col-sm-3 d-block mx-auto"
+                    style="height: 2%" onclick="openGoalie()">
+                Goalies
+            </button>
+    </div>
+</div>
+
+</body>
+<footer class="col-sm-12 card-footer" style="margin-top: 2%">
+    <div class="row">
+        <div class="col-sm-4 my-auto" style="padding-bottom: 0.5%">
+            <a href="https://github.com/AliRZ-02">
+                <img src="{{ url_for('static', filename='/Resources/github.png') }}" style="display: flex;
+            align-items: center; flex-wrap: wrap;" class="d-block mx-auto">
+            </a>
+        </div>
+        <div class="col-sm-8 my-auto">
+            <h1 style="font-size: large; text-align: center; margin-top: 0.5%">
+                Developed by Ali Raza Zaidi and Danyal Zaidi.
+                To find out more, check out the <a href="https://github.com/AliRZ-02"> GitHub </a> repository
+            </h1>
         </div>
     </div>
-</div>
-    <div class="container">
-        {% for player in players %}
-        <p>{{ player.name }}</p>
-        {% endfor %}
-    </div>
-<div class="form" style="font-size: small">
-    <form action="/" method="POST">
-        <input type="text" name="player_name" id = "player_name">
-        <input type="submit" value="Search Player">
-    </form>
-</div>
-</body>
+</footer>
 </html>
