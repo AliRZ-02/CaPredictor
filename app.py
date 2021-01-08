@@ -50,7 +50,7 @@ def index():
                 and value != "Such a player was not found. Try using manual mode":
             try:
                 print(value)
-                link = "http://nhl.bamcontent.com/images/headshots/current/168x168/" \
+                link = "https://nhl.bamcontent.com/images/headshots/current/168x168/" \
                        + value.split(":")[4] + ".jpg"
                 nations = {"CAN": "CA", "USA": "US", "SWE": "SE", "RUS": "RU",
                            "FIN": "FI", "CZE": "CZ", "CHE": "CH", "DNK": "DK",
