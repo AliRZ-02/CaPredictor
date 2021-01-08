@@ -85,7 +85,7 @@ class GetInfo:
         prediction = algorithm.goalie(gp, gaa, svpct, winpct)
         return prediction
     def __id(self):
-        reader = csv.reader(open('Data\Players\idList.csv'))
+        reader = csv.reader(open('..\Data\Players\idList.csv'))
         players = {}
         name_list = []
         for name, id in reader:
