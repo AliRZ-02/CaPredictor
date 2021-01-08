@@ -1,3 +1,9 @@
+<!--
+Name: Ali Raza Zaidi
+Date: Jan 8 2021
+Purpose: HTML file describing the layout for the main manual site
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +14,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
     <title>CaPredictor</title>
+
+    <!--    I Used Bootstrap for most styling, however, for @media queries, I ran into some issues, so I moved them all to
+ the header section -->
     <style>
         * {
             box-sizing: border-box;
@@ -28,8 +37,13 @@
     </style>
 </head>
 
+<!-- The Body of the Page. Bootstrap was used for the styling of most elements -->
+
+<!-- The Main Icon and Name is put in a block that is visible here -->
+
 <body class="px-0; mx-0">
 <div class="container-fluid p-0" style="background:#2d3436; overflow: hidden" >
+
     <div class="row">
         <div class="col-sm-4">
             <img src="{{ url_for('static', filename='/Resources/CaPredictorIcon.png') }}" alt="" class="rounded mx-auto d-block">
@@ -39,12 +53,17 @@
                 margin-top: 0; font-size: 10vw;}"> CaPredictor </h1>
         </div>
     </div>
+
 </div>
+
+<!-- Manual Mode Toggle and Label section -->
+
 <div class="container-fluid border border-white" style="background: #c0392b; overflow: hidden">
     <div class="row" style="overflow: hidden; padding-top:0.5%; padding-bottom: 0.5%">
         <div class="col-sm-6 my-auto" style="overflow: hidden">
             <h3 style="text-align: center; color: white;  overflow: hidden;
              font-weight: lighter" id="state" >
+
                 <script>
                     function toggled() {
                         check = document.getElementById("checkboxItem").checked
@@ -59,45 +78,60 @@
                     }
                 </script> Manual Mode </h3>
         </div>
-            <label class="switch col-sm-0 my-auto d-block mx-auto" rel="script"
-                   id="toggle-switch" onchange="toggled()">
-                <input type="checkbox" id="checkboxItem" checked>
-                <span class="slider round"></span>
-            </label>
+
+        <label class="switch col-sm-0 my-auto d-block mx-auto" rel="script"
+               id="toggle-switch" onchange="toggled()">
+            <input type="checkbox" id="checkboxItem" checked>
+            <span class="slider round"></span>
+        </label>
+
     </div>
 </div>
+
+<!-- Manual Mode Toggles -->
+
 <div class="container-fluid p-0 border-white"
      style="overflow: hidden; margin-top: 2%; margin-bottom: 2%; height: 3%">
     <div class="row">
+
         <script>
-                    function openGoalie() {
-                        location.href = "{{ url_for('goalie') }}"
-                    }
-                    function openDefence() {
-                        location.href = "{{ url_for('defence') }}"
-                    }
-                    function openForward() {
-                        location.href = "{{ url_for('forward') }}"
-                    }
-                </script>
-            <button class="btn btn-outline-primary col-sm-3 d-block mx-auto"
-                    style="height: 2%" onclick="openForward()">
-                Forwards
-            </button>
+            function openGoalie() {
+                location.href = "{{ url_for('goalie') }}"
+            }
+            function openDefence() {
+                location.href = "{{ url_for('defence') }}"
+            }
+            function openForward() {
+                location.href = "{{ url_for('forward') }}"
+            }
+        </script>
+
+        <button class="btn btn-outline-primary col-sm-3 d-block mx-auto"
+                style="height: 2%" onclick="openForward()">
+            Forwards
+        </button>
+
         <div class="col-sm-1"></div>
-            <button class="btn btn-outline-danger col-sm-3" style="height: 2%"
-                    onclick="openDefence()">
-                Defencemen
-            </button>
+
+        <button class="btn btn-outline-danger col-sm-3" style="height: 2%"
+                onclick="openDefence()">
+            Defencemen
+        </button>
+
         <div class="col-sm-1"></div>
-            <button class="btn btn-outline-success col-sm-3 d-block mx-auto"
-                    style="height: 2%" onclick="openGoalie()">
-                Goalies
-            </button>
+
+        <button class="btn btn-outline-success col-sm-3 d-block mx-auto"
+                style="height: 2%" onclick="openGoalie()">
+            Goalies
+        </button>
+
     </div>
 </div>
 
 </body>
+
+<!-- Footer and Credits -->
+
 <footer class="col-sm-12 card-footer" style="margin-top: 2%">
     <div class="row">
         <div class="col-sm-4 my-auto" style="padding-bottom: 0.5%">

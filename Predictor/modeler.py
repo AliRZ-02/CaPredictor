@@ -1,6 +1,5 @@
 # Name: Ali Raza Zaidi
 # Date: January 2, 2021
-# Program: modeler.py
 # Purpose: Create Models for future Contracts based on current player data
 
 # Import Statements ---------------------------------------------------------------------------

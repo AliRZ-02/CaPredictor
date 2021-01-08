@@ -1,3 +1,9 @@
+<!--
+Name: Ali Raza Zaidi
+Date: Jan 8 2021
+Purpose: HTML file describing the layout for the main site
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +14,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
     <title>CaPredictor</title>
+
+    <!--    I Used Bootstrap for most styling, however, for @media queries, I ran into some issues, so I moved them all to
+ the header section -->
     <style>
         * {
             box-sizing: border-box;
@@ -28,30 +37,43 @@
     </style>
 </head>
 
+<!-- The Body of the Page. Bootstrap was used for the styling of most elements -->
+
+<!-- If the request returns an error, an alert page opens up notifying the user about said issues -->
+
 <body class="px-0; mx-0">
 
 {% if url_for(request.endpoint) == "/error" %}
-    <script>
-        alert("The player you were looking for was not found. Try using manual mode")
-    </script>
+<script>
+    alert("The player you were looking for was not found. Try using manual mode")
+</script>
 {% endif %}
+
+<!-- The Main Icon and Name is put in a block that is visible here -->
 
 <div class="container-fluid p-0" style="background:#2d3436; overflow: hidden" >
     <div class="row">
+
         <div class="col-sm-4">
             <img src="{{ url_for('static', filename='/Resources/CaPredictorIcon.png') }}" alt="" class="rounded mx-auto d-block">
         </div>
+
         <div class="col-sm-8 my-auto">
             <h1 style="color: white; font-weight: lighter;
                 margin-top: 0; font-size: 10vw;}"> CaPredictor </h1>
         </div>
+
     </div>
 </div>
+
+<!-- Manual Mode Toggle and Label section -->
+
 <div class="container-fluid border border-white" style="background: #c0392b; overflow: hidden">
     <div class="row" style="overflow: hidden; padding-top:0.5%; padding-bottom: 0.5%">
         <div class="col-sm-6 my-auto" style="overflow: hidden">
             <h3 style="text-align: center; color: white;  overflow: hidden;
              font-weight: lighter" id="state" >
+
                 <script>
                     function toggled() {
                         check = document.getElementById("checkboxItem").checked
@@ -64,24 +86,32 @@
                         }
                     }
                 </script> Manual Mode </h3>
+
         </div>
-            <label class="switch col-sm-0 my-auto d-block mx-auto" rel="script"
-                   id="toggle-switch" onchange="toggled()">
-                <input type="checkbox" id="checkboxItem">
-                <span class="slider round"></span>
-            </label>
+
+        <label class="switch col-sm-0 my-auto d-block mx-auto" rel="script"
+               id="toggle-switch" onchange="toggled()">
+            <input type="checkbox" id="checkboxItem">
+            <span class="slider round"></span>
+        </label>
+
     </div>
 </div>
+
+<!-- Player Input Information Form is Here -->
+
 <div class="container-fluid p-0 border-white" style="overflow: hidden; margin-top: 2%; margin-bottom: 2%">
     <div class="form-group my-auto" style="font-size: small">
+
         <form class="row" action="/" method="POST" style="width: 100%; margin-left: 0.25%"
               autocomplete="off">
+
             <input class="col-sm-3 form-control" type="text" name="player_name"
                    id = "player_name" placeholder="Player Name" style="text-align: center"
-            >
+            required>
             <input class="col-sm-3 form-control" type="number" max="8" min="1"
                    name="length" id="length" placeholder="Contract Length"
-                   style="text-align: center">
+                   style="text-align: center" required>
             <select name="resign" id="resign" class="col-sm-3 form-control" style="text-align-last: center; text-align: center">
                 <option>Re-sign</option>
                 <option>Free Agent</option>
@@ -89,8 +119,12 @@
             <input type="submit" value="Search Player" class="col-sm-3 btn btn-primary"
                    id="search">
         </form>
+
     </div>
 </div>
+
+<!-- Results are only shown once the user submits their query, so a Jinja2 block is put here to check the url
+ The player results are then displayed -->
 
 {% if players is defined and players[0] is defined and players[0].name.split(':')[0] != "User-Generated-F"
 and players[0].name.split(':')[0] != "User-Generated-D" and players[0].name.split(':')[0] != "User-Generated-G"
@@ -107,31 +141,34 @@ padding-left: 2vw; padding-right: 2vw; overflow: hidden">
             <a href="https://www.nhl.com">
                 <img src="{{ url_for('static', filename='/Images/'+players[0].photo+'.jpg') }}" style="display: flex;
             align-items: center; flex-wrap: wrap;"
-                 class="d-block mx-auto my-auto" alt="Error">
+                     class="d-block mx-auto my-auto" alt="Error">
             </a>
         </div>
         <div class="col-sm-6 my-auto">
             <h1 style="font-size: large; text-align: center">
-            {{ players[0].name.split(':')[0] }} was worth
+                {{ players[0].name.split(':')[0] }} was worth
                 <span style="color: #c0392b"> {{ players[0].name.split(':')[2] }} </span>
                 for {{ players[0].name.split(':')[3] }} year(s) after his
                 {{ players[0].name.split(':')[1][1:].split(")")[0] }} season
             </h1>
         </div>
-            <div class="col-sm-3 my-auto" style="padding-bottom: 2%">
-                <a href="https://flagpedia.net">
-                    <img src="{{ players[0].nationality }}"
-                 srcset="{{ players[0].nationality_2 }}"
-                 width="168" height="168" alt="{{ players[0].nationality }}"
-                 style="display: flex; align-items: center; flex-wrap: wrap;
+        <div class="col-sm-3 my-auto" style="padding-bottom: 2%">
+            <a href="https://flagpedia.net">
+                <img src="{{ players[0].nationality }}"
+                     srcset="{{ players[0].nationality_2 }}"
+                     width="168" height="168" alt="{{ players[0].nationality }}"
+                     style="display: flex; align-items: center; flex-wrap: wrap;
                   object-fit: contain"
-                 class="d-block mx-auto my-auto">
-                </a>
+                     class="d-block mx-auto my-auto">
+            </a>
         </div>
     </div>
 </div>
 
 {% endif %}
+
+<!-- Results are only shown once the user submits their query, so a Jinja2 block is put here to check the url
+ Recent Searches are then shown -->
 
 {% if url_for(request.endpoint) == "/results" %}
 
@@ -173,6 +210,9 @@ padding-left: 2vw; padding-right: 2vw; overflow: hidden">
     {% endif %}
 </div>
 </body>
+
+<!-- Footer and Credits -->
+
 <footer class="col-sm-12 card-footer" style="margin-top: 2%">
     <div class="row">
         <div class="col-sm-4 my-auto" style="padding-bottom: 0.5%">
