@@ -49,9 +49,7 @@ def index():
         if value != "No Player Found. Please try again using manual mode" \
                 and value != "Such a player was not found. Try using manual mode":
             try:
-                print(value)
-                link = "https://nhl.bamcontent.com/images/headshots/current/168x168/" \
-                       + value.split(":")[4] + ".jpg"
+                id = value.split(":")[4]
                 nations = {"CAN": "CA", "USA": "US", "SWE": "SE", "RUS": "RU",
                            "FIN": "FI", "CZE": "CZ", "CHE": "CH", "DNK": "DK",
                            "DEU": "DE", "SVK": "SK", "AUT": "AT", "SVN": "SI",
@@ -60,7 +58,7 @@ def index():
                 nation = nations[money.flag()].lower()
                 flag = "https://flagcdn.com/w160/" + nation + ".png"
                 flag2 = "https://flagcdn.com/w320/" + nation + ".png 2x"
-                new_player = Todo(name=value, photo=link, nationality=flag, nationality_2=flag2)
+                new_player = Todo(name=value, photo=id, nationality=flag, nationality_2=flag2)
                 reduce_db()
                 check_duplicates(new_player)
                 db.session.add(new_player)
