@@ -3,6 +3,7 @@ import csv
 import requests
 from Predictor import predictor
 from difflib import get_close_matches
+import os
 
 class GetInfo:
     def __init__(self, player_name, length):
@@ -85,7 +86,7 @@ class GetInfo:
         prediction = algorithm.goalie(gp, gaa, svpct, winpct)
         return prediction
     def __id(self):
-        reader = csv.reader(open('..\Data\Players\idList.csv'))
+        reader = csv.reader(open('Data/Players/idList.csv'))
         players = {}
         name_list = []
         for name, id in reader:
