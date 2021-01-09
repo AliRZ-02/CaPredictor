@@ -3,6 +3,8 @@
 - A Flask App that runs a machine learning model for NHL Contracts and predicts a valuation for 
 the player in question via the player's stats from the previous season
 - [Visit CaPredictor here!](https://capredictor.herokuapp.com)
+- Since I'm using a Free Heroku account, sometimes the app goes in hibernation and takes some 
+time to open back up. Do not fret - Just reload and let it take its time!
 
 ## Motivation
 - I have enjoyed hockey for a very long time and as a born-and-raised Canadian, hockey flows through my veins. 
@@ -13,8 +15,6 @@ the player in question via the player's stats from the previous season
 
 ### Getting Started
 - Visit the website at https://capredictor.herokuapp.com.
-- Since I'm using a Free Heroku account, sometimes the app goes in hibernation and takes some 
-time to open back up. Do not fret - Just reload and let it take its time!
 - When running a program of this sort on your own machine, you will need to have several python files installed, preferably
 within a virtual environment and the required files can be seen in the `[Requirements File](requirements.txt)`
 - Knowledge of Front-End development and Back-End development(through Flask) is required. Additionally, 
