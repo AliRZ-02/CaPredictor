@@ -1,4 +1,8 @@
 # CaPredictor
+
+[Visit Me](https://capredictor.onrender.com)
+- This might take a minute to boot up.
+
 ![Website](CaPredictor.png)
 - A Flask App that runs a machine learning model for NHL Contracts and predicts a valuation for 
 the player in question via the player's stats from the previous season
